@@ -3,35 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>JPPX - Secure Login</title>
-  <meta name="description" content="Secure admin panel login for JPPX">
+  <title>JPPX - Login</title>
+  <meta name="description" content="Admin panel login for JPPX">
   <link rel="icon" href="/favicoc.png" type="image/png">
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+  <!-- Using Poppins font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    /* Inspired by modern admin panel designs and Cloudflare templates */
     body {
       margin: 0;
       padding: 0;
       height: 100vh;
       background: #0f2027;
-      font-family: 'Comfortaa', sans-serif;
-      color: white;
+      font-family: 'Poppins', sans-serif;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      color: white;
+    }
+    .background {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, rgba(30,144,255,0.2), transparent);
+      z-index: -2;
     }
     .login-container {
       background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(8px);
       padding: 30px;
       border-radius: 40px;
       box-shadow: 0 8px 30px rgba(0,191,255,0.3);
       text-align: center;
       width: 300px;
+      position: relative;
+      z-index: 1;
     }
     h1 {
       margin-bottom: 20px;
       font-size: 32px;
+      font-weight: 600;
     }
     input {
       width: 100%;
@@ -64,6 +74,7 @@
   </style>
 </head>
 <body>
+  <div class="background"></div>
   <div class="login-container">
     <h1>Admin Login</h1>
     <input type="text" id="username" placeholder="Username" required />
@@ -71,15 +82,14 @@
     <button onclick="login()">Login</button>
   </div>
   <script>
-    // The SHA-256 hash for the correct password "popl0"
-    // 515405433c9af23befb9c2f9767dfa9806b6181663d1c90e60df755f99585bdd
+    // Correct password hash for "popl0"
     const correctHash = "515405433c9af23befb9c2f9767dfa9806b6181663d1c90e60df755f99585bdd";
     
     async function sha256(message) {
-      const msgBuffer = new TextEncoder().encode(message);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      const encoder = new TextEncoder();
+      const data = encoder.encode(message);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
     }
     
     async function login() {
@@ -88,7 +98,6 @@
       if (username === "admin") {
         const hash = await sha256(password);
         if (hash === correctHash) {
-          // Save login flag in localStorage
           localStorage.setItem("loggedIn", "true");
           window.location.href = "panel.html";
           return;
