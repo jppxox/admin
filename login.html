@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JPPX - Login</title>
+  <meta name="description" content="Admin panel login for JPPX">
+  <link rel="icon" href="/favicoc.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0f2027;
+      font-family: 'Comfortaa', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-box {
+      background: rgba(255,255,255,0.1);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,191,255,0.3);
+      text-align: center;
+    }
+    input {
+      margin: 10px 0;
+      padding: 12px;
+      border: 2px solid white;
+      border-radius: 10px;
+      background: transparent;
+      color: white;
+      font-size: 16px;
+      width: 250px;
+    }
+    input:focus {
+      outline: none;
+      border-color: #00bfff;
+    }
+    button {
+      background: #00bfff;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #008fb3;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h1>JPPX Admin Login</h1>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password" onkeydown="if(event.key==='Enter'){login();}">
+    <button onclick="login()">Login</button>
+  </div>
+  <script>
+    // Correct password: "popl0" -> SHA-256 hash:
+    // 515405433c9af23befb9c2f9767dfa9806b6181663d1c90e60df755f99585bdd
+    const correctHash = "515405433c9af23befb9c2f9767dfa9806b6181663d1c90e60df755f99585bdd";
+    
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+    
+    async function login() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      // Check username and password (here username must be "admin")
+      if (username === "admin") {
+        const hash = await sha256(password);
+        if (hash === correctHash) {
+          localStorage.setItem("loggedIn", "true");
+          window.location.href = "panel.html";
+          return;
+        }
+      }
+      alert("Invalid credentials!");
+      localStorage.setItem("loggedIn", "false");
+    }
+  </script>
+</body>
+</html>
