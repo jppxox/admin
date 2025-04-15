@@ -1,17 +1,156 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Login</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JPPX</title>
+  <meta name="description" content="Discord: kubusss_">
+  <link rel="icon" href="/favicoc.png" type="image/png">
+
+  <!-- Open Graph -->
+  <meta property="og:url" content="https://jppx.xyz">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="JPPX">
+  <meta property="og:description" content="Discord: kubusss_">
+  <meta property="og:image" content="https://opengraph.b-cdn.net/production/images/a48495b9-ed37-4e09-974e-fe71962d404a.png?token=2D-jB_goPCqmSsUB3PpbB0TPLt69GlR-wX4KbaQ2biY&height=200&width=350&expires=33276834984">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:domain" content="jppx.xyz">
+  <meta property="twitter:url" content="https://jppx.xyz">
+  <meta name="twitter:title" content="JPPX">
+  <meta name="twitter:description" content="Discord: kubusss_">
+  <meta name="twitter:image" content="https://opengraph.b-cdn.net/production/images/a48495b9-ed37-4e09-974e-fe71962d404a.png?token=2D-jB_goPCqmSsUB3PpbB0TPLt69GlR-wX4KbaQ2biY&height=200&width=350&expires=33276834984">
+
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: black;
+      position: relative;
+      font-family: 'Comfortaa', sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-direction: column;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .background {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, rgba(30, 144, 255, 0.2), transparent);
+      z-index: -2;
+    }
+
+    .particle {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      background: #00bfff;
+      border-radius: 50%;
+      filter: blur(4px);
+      animation: moveParticle 15s infinite ease-in-out;
+      z-index: -1;
+    }
+
+    @keyframes moveParticle {
+      0%   { transform: translate(0, 0); }
+      25%  { transform: translate(20vw, 10vh); }
+      50%  { transform: translate(40vw, 20vh); }
+      75%  { transform: translate(20vw, 30vh); }
+      100% { transform: translate(0, 0); }
+    }
+
+    .iframe-top {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-40%);
+      z-index: 2;
+    }
+
+    .header-container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+      border-radius: 40px;
+      padding: 20px 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 30px rgba(0, 191, 255, 0.2);
+    }
+
+    h1 {
+      font-size: 40px;
+      font-weight: 700;
+      margin: 0;
+      border: none;
+      padding: 0;
+    }
+
+    .button-container {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      border-radius: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px;
+      z-index: 1;
+    }
+
+    .button {
+      background-color: transparent;
+      color: white;
+      border: 2px solid white;
+      border-radius: 40px;
+      padding: 8px 16px;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: white;
+      color: black;
+    }
+  </style>
 </head>
 <body>
-  <div class="login-box">
-    <h2>Admin Login</h2>
-    <input type="password" id="password" placeholder="Enter password" />
-    <button onclick="login()">Login</button>
-    <p id="error-msg"></p>
+  <div class="background"></div>
+
+  <!-- Particles -->
+  <div class="particle" style="top: 10%; left: 20%;"></div>
+  <div class="particle" style="top: 50%; left: 80%;"></div>
+  <div class="particle" style="top: 80%; left: 30%;"></div>
+  <div class="particle" style="top: 20%; left: 70%;"></div>
+  <div class="particle" style="top: 40%; left: 10%;"></div>
+
+  <!-- Iframe lekko przesuniêty w prawo -->
+  <iframe class="iframe-top" src="https://status.jppx.xyz/badge?theme=light" width="250" height="30" frameborder="0" scrolling="no" style="color-scheme: normal;"></iframe>
+
+  <!-- Header -->
+  <div class="header-container">
+    <h1>What are you searching for?</h1>
   </div>
-  <script src="script.js"></script>
+
+  <!-- Buttons -->
+  <div class="button-container">
+    <a href="/aboutme" class="button">About</a>
+    <a href="/contact" class="button">Contact</a>
+  </div>
 </body>
 </html>
