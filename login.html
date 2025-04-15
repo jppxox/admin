@@ -1,66 +1,102 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login</title>
-  <meta name="description" content="Discord: kubusss_">
-  <link rel="icon" href="https://jppx.xyz/favicon.png" type="image/png">
+  <title>JPPX - Secure Login</title>
+  <meta name="description" content="Secure admin panel login for JPPX">
+  <link rel="icon" href="/favicoc.png" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
   <style>
+    /* Inspired by modern admin panel designs and Cloudflare templates */
     body {
       margin: 0;
       padding: 0;
       height: 100vh;
-      background-color: #111;
+      background: #0f2027;
+      font-family: 'Comfortaa', sans-serif;
       color: white;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: 'Comfortaa', sans-serif;
     }
-    .container {
-      text-align: center;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
+    .login-container {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
       padding: 30px;
-      backdrop-filter: blur(8px);
+      border-radius: 40px;
+      box-shadow: 0 8px 30px rgba(0,191,255,0.3);
+      text-align: center;
+      width: 300px;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 32px;
     }
     input {
-      padding: 10px;
-      border-radius: 5px;
-      border: none;
-      margin-bottom: 15px;
-      width: 200px;
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 2px solid white;
+      border-radius: 25px;
+      background: transparent;
+      color: white;
       font-size: 16px;
     }
+    input:focus {
+      outline: none;
+      border-color: #00bfff;
+    }
     button {
-      padding: 10px 20px;
-      background-color: #00bfff;
-      color: white;
+      width: 100%;
+      padding: 12px;
+      background: #00bfff;
       border: none;
-      border-radius: 5px;
+      border-radius: 25px;
+      color: white;
+      font-size: 16px;
       cursor: pointer;
+      transition: background 0.3s;
     }
     button:hover {
-      background-color: #008b8b;
+      background: #008fb3;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Login</h1>
-    <form method="POST" action="/login">
-      <input type="password" name="password" placeholder="Enter password" id="password" required />
-      <button type="submit">Login</button>
-    </form>
+  <div class="login-container">
+    <h1>Admin Login</h1>
+    <input type="text" id="username" placeholder="Username" required />
+    <input type="password" id="password" placeholder="Password" required onkeydown="if(event.key==='Enter'){login();}" />
+    <button onclick="login()">Login</button>
   </div>
   <script>
-    document.getElementById('password').addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') {
-        document.querySelector('form').submit();
+    // The SHA-256 hash for the correct password "popl0"
+    // 515405433c9af23befb9c2f9767dfa9806b6181663d1c90e60df755f99585bdd
+    const correctHash = "515405433c9af23befb9c2f9767dfa9806b6181663d1c90e60df755f99585bdd";
+    
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+    
+    async function login() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      if (username === "admin") {
+        const hash = await sha256(password);
+        if (hash === correctHash) {
+          // Save login flag in localStorage
+          localStorage.setItem("loggedIn", "true");
+          window.location.href = "panel.html";
+          return;
+        }
       }
-    });
+      alert("Invalid credentials!");
+      localStorage.setItem("loggedIn", "false");
+    }
   </script>
 </body>
 </html>

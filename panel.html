@@ -1,61 +1,138 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Panel</title>
-  <meta name="description" content="Admin Panel for JPPX">
-  <link rel="icon" href="https://jppx.xyz/favicon.png" type="image/png">
+  <title>JPPX - Admin Panel</title>
+  <meta name="description" content="Secure admin panel for JPPX displaying domain statistics and charts">
+  <link rel="icon" href="/favicoc.png" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       margin: 0;
       padding: 0;
-      height: 100vh;
-      background-color: #111;
+      background: #121212;
+      font-family: 'Comfortaa', sans-serif;
       color: white;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      font-family: 'Comfortaa', sans-serif;
+      min-height: 100vh;
     }
-    .container {
-      text-align: center;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
+    .panel-container {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
       padding: 30px;
-      backdrop-filter: blur(8px);
+      border-radius: 40px;
+      box-shadow: 0 8px 30px rgba(0,191,255,0.3);
+      width: 90%;
+      max-width: 800px;
+      text-align: center;
+      animation: fadeIn 1.2s ease-out;
     }
     h1 {
       margin-bottom: 20px;
+      font-size: 36px;
     }
-    .stats {
-      margin-bottom: 30px;
+    .stat {
+      background: rgba(255,255,255,0.08);
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 30px;
+      box-shadow: 0 4px 12px rgba(0,191,255,0.3);
       font-size: 18px;
     }
-    button {
-      padding: 10px 20px;
-      background-color: #00bfff;
-      color: white;
+    .button {
+      background: #00bfff;
       border: none;
-      border-radius: 5px;
+      padding: 12px 24px;
+      border-radius: 30px;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
+      margin: 10px;
+      transition: background 0.3s;
     }
-    button:hover {
-      background-color: #008b8b;
+    .button:hover {
+      background: #008fb3;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Admin Panel</h1>
-    <div class="stats">
+  <script>
+    // Enforce secure access: if not logged in, redirect to login page
+    if (localStorage.getItem("loggedIn") !== "true") {
+      window.location.href = "login.html";
+    }
+  </script>
+  <div class="panel-container">
+    <h1>JPPX Admin Panel</h1>
+    <div class="stat">
       <p><strong>Domain:</strong> jppx.xyz</p>
-      <p><strong>Users online:</strong> 124</p>
-      <p><strong>Current time:</strong> 04/15/2025 22:05:50</p>
+      <p><strong>Status:</strong> <span id="domainStatus">Loading...</span></p>
     </div>
-    <button onclick="location.href='/manage-users'">Manage Users</button>
-    <button onclick="location.href='/settings'">Settings</button>
+    <div class="stat">
+      <p><strong>Uptime Chart:</strong></p>
+      <canvas id="uptimeChart" width="400" height="200"></canvas>
+    </div>
+    <div>
+      <button class="button" onclick="location.href='/manage-users'">Manage Users</button>
+      <button class="button" onclick="location.href='/settings'">Settings</button>
+      <button class="button" onclick="logout()">Logout</button>
+    </div>
   </div>
+  
+  <script>
+    function fetchDomainStatus() {
+      // Replace with your actual API call if available
+      fetch("https://status.jppx.xyz/api")
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById("domainStatus").textContent = data.status || "Online";
+        })
+        .catch(() => {
+          document.getElementById("domainStatus").textContent = "Unavailable";
+        });
+    }
+    
+    function renderChart() {
+      const ctx = document.getElementById("uptimeChart").getContext("2d");
+      new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+          datasets: [{
+            label: "Uptime (%)",
+            data: [99, 98, 97, 99.5, 100, 99.7, 98.9],
+            backgroundColor: "rgba(0,191,255,0.3)",
+            borderColor: "#00bfff",
+            borderWidth: 2,
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          scales: {
+            y: { beginAtZero: true, max: 100 }
+          }
+        }
+      });
+    }
+    
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      window.location.href = "login.html";
+    }
+    
+    fetchDomainStatus();
+    renderChart();
+  </script>
 </body>
 </html>
